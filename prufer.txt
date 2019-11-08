@@ -1,0 +1,66 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<conio.h>
+#include<math.h>
+static int **A,V,E;
+// tim deg
+int Deg(int dinh){
+	int deg=0,count;
+	for (count =0; count<E; count++){
+		if((A[count][1] == dinh)||(A[count][2] == dinh)){
+			deg++;
+		}
+	}
+	return deg;
+}
+// tim min cua cac dinh co deg==1
+int MinDeg1(){
+	int dinh,count,min=V-1;
+	for(dinh =1; dinh<=V;dinh++){
+		if((Deg(dinh) == 1)&&(dinh<min)){
+			min = dinh;
+		}
+	}
+	return min;
+}
+// nho canh sau do xoa canh
+void Prufer(){
+	int i=0,d;
+	do{
+		if((A[i][1]==MinDeg1())||(A[i][2]==MinDeg1())){
+			if(A[i][1] == MinDeg1()){
+				printf("%d ",A[i][2]);
+			}
+			else if (A[i][2] == MinDeg1()){
+				printf("%d ",A[i][1]);				
+			}			
+		}
+		i++;
+	}while((A[i-1][1]!= MinDeg1() ) && ( A[i-1][2]!= MinDeg1() ) );
+	for(d=i-1;d<(E-1);d++){
+		A[d] = A[d+1];
+	}
+}
+int main(){
+	// Nhap so dinh, canh va nhap cac canh
+	int i;
+	printf("Nhap so dinh: ");scanf("%d",&V);
+	printf("Nhap so canh: ");scanf("%d",&E);
+	A =(int **)malloc(E*sizeof(int*));
+	printf("Nhap cac canh: \n");
+	for(i=0; i<E; i++ ){
+		A[i] = (int *)malloc(sizeof(int));
+		scanf("%d",&A[i][1]);
+		scanf("%d",&A[i][2]);
+	}
+	// chay Prufer
+	while(E>1){
+		Prufer();
+		E--;
+	}
+	for ( i=0; i<E ; i++){
+		free(A[i]);
+	}
+	free(A);
+	getch();
+}
